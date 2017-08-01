@@ -1,37 +1,72 @@
-# #8
-require_relative 'entry'
+Skip to content
+This repository
+Search
+Pull requests
+Issues
+Marketplace
+Gist
+ @sunnydgoswami
+ Sign out
+ Watch 14
+  Star 1
+ Fork 4 Bloc/address-bloc-bak
+ Code  Issues 0  Pull requests 0  Projects 0  Wiki Insights 
+Branch: master Find file Copy pathaddress-bloc-bak/models/address_book.rb
+18d2d6d  on Jun 26, 2015
+ robmadden Complete Searching
+0 contributors
+RawBlameHistory     
+52 lines (43 sloc)  1.04 KB
+require_relative "entry.rb"
+require "csv"
 
-  class AddressBook
-    attr_reader :entries
+class AddressBook
+  attr_accessor :entries
 
-    def initialize
-      @entries = []
-    end
+  def initialize
+    @entries = []
+  end
 
-    def remove_entry(name, phone, email)
-      delete_entry = nil
-
-      @entries.each do |entry|
-        if name == entry.name && phone == entry.phone_number && email == entry.email
-          delete_entry = entry
-        end
+  def add_entry(name, phone, email)
+    index = 0
+    @entries.each do |entry|
+      if name < entry.name
+        break
       end
-      @entries.delete(delete_entry)
+      index += 1
     end
+    @entries.insert(index, Entry.new(name, phone, email))
+  end
 
-
-    def add_entry(name, phone_number, email)
-      # #9
-      index = 0
-      entries.each do |entry|
-        # #10
-        if name < entry.name
-          break
-        end
-        index+= 1
-      end
-      # #11
-      entries.insert(index, Entry.new(name, phone_number, email))
+  def import_from_csv(file_name)
+    csv_text = File.read(file_name)
+    csv = CSV.parse(csv_text, headers: true, skip_blanks: true)
+    csv.each do |row|
+      row_hash = row.to_hash
+      add_entry(row_hash["name"], row_hash["phone_number"], row_hash["email"])
     end
+  end
 
+  # Search AddressBook for a specific entry by name
+  def binary_search(name)
+     lower = 0
+     upper = entries.length - 1
+
+     while lower <= upper
+       mid = (lower + upper) / 2
+       mid_name = entries[mid].name
+ 
+       if name == mid_name
+         return entries[mid]
+       elsif name < mid_name
+         upper = mid - 1
+       elsif name > mid_name
+         lower = mid + 1
+       end
+     end
+
+     return nil
+  end
 end
+Contact GitHub API Training Shop Blog About
+© 2017 GitHub, Inc. Terms Privacy Security Status Help
