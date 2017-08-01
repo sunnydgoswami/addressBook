@@ -19,6 +19,17 @@ class AddressBook
     end
     @entries.insert(index, Entry.new(name, phone, email))
   end
+  
+  def interative_search(name)
+      entries.each do |entry|
+          if entry.name == name
+              return entry
+          end
+      end
+      
+      return nil
+  end
+  
 
   def import_from_csv(file_name)
     csv_text = File.read(file_name)
@@ -50,5 +61,3 @@ class AddressBook
      return nil
   end
 end
-Contact GitHub API Training Shop Blog About
-© 2017 GitHub, Inc. Terms Privacy Security Status Help
