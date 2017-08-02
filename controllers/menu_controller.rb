@@ -14,7 +14,8 @@ class MenuController
     puts "3 - Create an entry"
     puts "4 - Search for an entry"
     puts "5 - Import entries from a CSV"
-    puts "6 - Exit"
+    puts "6 - Delete all entries"
+    puts "7 - Exit"
     print "Enter your selection: "
 
     selection = gets.to_i
@@ -41,6 +42,11 @@ class MenuController
         read_csv
         main_menu
       when 6
+        system "clear"
+        @address_book.nuke
+        puts "All entries deleted"
+        main_menu
+      when 7
         puts "Good-bye!"
         exit(0)
       else
@@ -121,6 +127,35 @@ class MenuController
       puts "No match found for #{name}"
     end
   end
+  
+   def search_submenu(entry)
+     # #12
+     puts "\nd - delete entry"
+     puts "e - edit this entry"
+     puts "m - return to main menu"
+     # #13
+     selection = gets.chomp
+ 
+     # #14
+     case selection
+       when "d"
+         system "clear"
+         delete_entry(entry)
+         main_menu
+       when "e"
+         edit_entry(entry)
+         system "clear"
+         main_menu
+       when "m"
+         system "clear"
+         main_menu
+       else
+         system "clear"
+         puts "#{selection} is not a valid input"
+         puts entry.to_s
+         search_submenu(entry)
+     end
+   end  
 
   def read_csv
      # #1
